@@ -81,22 +81,22 @@ def diaSemana():
     año = solicitarAño() 
     if (año == False):
         return False
-    text = "»El primero de la semana del (" + str(año) + ")"
+    text = "»El 1 de Enero del  (" + str(año) + ") tiene como día"
     dia = validar.obtenerDiaPrimeroDeEnero(año)
     if (dia == 0):
-        text += " es Domingo \n"
+        text += "  Domingo \n"
     elif (dia == 1):
-        text += " es Lunes \n"
+        text += "  Lunes \n"
     elif (dia == 2):
-        text += " es Martes \n"
+        text += "  Martes \n"
     elif (dia == 3):
-        text += " es Miércoles \n"
+        text += "  Miércoles \n"
     elif (dia == 4):
-        text += " es Jueves \n"
+        text += "  Jueves \n"
     elif (dia == 5):
-        text += " es Viernes \n"
+        text += "  Viernes \n"
     elif (dia == 6):
-        text += " es Sabado \n"
+        text += "  Sabado \n"
     else:
         return False
     print(text)
