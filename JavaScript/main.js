@@ -1,4 +1,5 @@
-const validar = require('./Validaciones');
+//create by Johel
+
 const { read } = require('node:fs');
 
 const readline = require('readline').createInterface({
@@ -25,15 +26,15 @@ async function solicitarAge(){
     var age = 0
     try {
         age = Number(await inputLine("Digite el año: "));
-        if (age <= 0) {
-            console.log("Se necesita un numero mayor a cero");
-            return false;
-        }
     } catch (e) {
         console.error(e);
         return false;
     }
-    return age;
+    if (validarAge(age)) {
+        return age;
+    }
+    else
+        return false;
 };
 
 async function solicitarDiaMesAge() {
@@ -42,76 +43,68 @@ async function solicitarDiaMesAge() {
         age = parseInt(await inputLine("Digite el año (ejm:2021): "), 10);
         mes = parseInt(await inputLine("Digite el mes(ejm: 2): "), 10);
         dia = parseInt(await inputLine("Digite el día(ejm:20): "), 10);
-        if (age <= 0 || mes <= 0 || dia <= 0) {
-            console.log("Se necesita un numero mayor a cero");
-            return false;
-        }
     } catch (e) {
         console.error(e);
         return false;
     }
-    console.log("La fecha actual es:", [age, mes, dia])
-    return [age, mes, dia];
-}
-
-async function consultarBisiestos() { 
-    var age = await solicitarAge();
-    var bisiesto = validar.esBisiesto(age);
-    if (age == false || bisiesto == -1)
-        return false;
-    bisiesto = validar.esBisiesto(age);
-    if (bisiesto == true)
-        console.log("»Es bisiesto \n");
-    else if(bisiesto == false)
-        console.log("»No es bisiesto \n");
-    return true;
-};
-
-async function consultarFecha() {
-    var fechaValida = await solicitarDiaMesAge();
-    console.log(fechaValida);
-    var valida = validar.esFechaValida(fechaValida)
-    if (fechaValida == false)
-        return false
-    else if (valida) {
-        console.log("»Es una fecha válida.");
-        return true;
+    fecha = [age, mes, dia];
+    var valida = esFechaValida(fecha)
+    if (valida) {
+        console.log("La fecha escrita es: ", fecha)
+        return fecha;
     }
-    return false;
-};
-
-async function consultarSiguiente() {
-    var fechaValida = await solicitarDiaMesAge();
-    if (fechaValida == false)
+    else
         return false;
-    //Obtenga una nueva fecha.
-    nuevaFecha = validar.obtenerDiaSiguiente(fechaValida)
-    if (!nuevaFecha)
-        return false;
-    console.log("»El siguiente día es: ", nuevaFecha);
-    return true;
 }
 
-async function contarDias() {
-    var fechaValida = await solicitarDiaMesAge();
-    if (fechaValida == false)
-        return false;
-    //Obtenga los días que han pasado.
-    var diasTotales = await validar.contarDiasPasados(fechaValida)
-
-    if (diasTotales >= 0) {
-        console.log("»Han pasado: ", diasTotales, " días");
-        return true;
-    }
-    return false;
-}
-
-async function diaSemana() {
+async function bisiesto() {
     var age = await solicitarAge();
+    var bisiesto = esBisiesto(age);
     if (age == false)
         return false;
-    var text = "»El 1 de Enero del  (" + age + ") tiene como día"
-    var dia = validar.obtenerDiaPrimeroDeEnero(age)
+    if (bisiesto == true)
+        console.log("Es bisiesto \n");
+    else if(bisiesto == false)
+        console.log("No es bisiesto \n");
+    return true;
+};
+
+async function fecha_es_valida() {
+    var fechaValida = await solicitarDiaMesAge();
+    if (!fechaValida)
+        return fechaValida;
+    console.log("Fecha valida \n");
+    return true;
+};
+
+async function dia_siguiente() {
+    var fechaValida = await solicitarDiaMesAge();
+    if (!fechaValida)
+        return fechaValida;
+    nuevaFecha = obtenerDiaSiguiente(fechaValida)
+    if (nuevaFecha)
+        console.log("El siguiente día es: ", nuevaFecha, "\n");
+    return nuevaFecha;
+}
+
+async function dias_desde_primero_enero() {
+    var fechaValida = await solicitarDiaMesAge();
+    if (!fechaValida)
+        return fechaValida;
+    var diasTotales = await contarDiasPasados(fechaValida);
+    if (diasTotales >= 0) {
+        console.log("Han pasado: ", diasTotales, " días \n");
+        return true;
+    }
+    return false;
+}
+
+async function dia_primero_enero() {
+    var age = await solicitarAge();
+    if (!age)
+        return age;
+    var text = "El 1 de Enero del  (" + age + ") tiene como día"
+    var dia = obtenerDiaPrimeroDeEnero(age)
     switch (dia) {
         case 0:
             text += " Domingo";
@@ -137,7 +130,7 @@ async function diaSemana() {
         default:
             false;
     }
-    console.log(text);
+    console.log(text, '\n');
     return true;
 }
 
@@ -150,7 +143,7 @@ const main = async () => {
     while (estado) {
         var estadoConsulta = false;
         console.log("Opciones")
-        console.log("1) Determinar si este año especifico es bisiesto ")
+        console.log("1) Determinar si un año es bisiesto ")
         console.log("2) Validar Fecha ")
         console.log("3) Día siguiente de una fecha ")
         console.log("4) Determinar los días que han pasado desde el primero de ese año. ")
@@ -161,23 +154,23 @@ const main = async () => {
             switch (opcion) {
                 case '1':
                     while (!estadoConsulta)
-                        estadoConsulta = await consultarBisiestos();
+                        estadoConsulta = await bisiesto();
                     break;
                 case '2':
                     while (!estadoConsulta)
-                        estadoConsulta = await consultarFecha();
+                        estadoConsulta = await fecha_es_valida();
                     break;
                 case '3':
                     while (!estadoConsulta)
-                        estadoConsulta = await consultarSiguiente();
+                        estadoConsulta = await dia_siguiente();
                     break;
                 case '4':
                     while (!estadoConsulta)
-                        estadoConsulta = await contarDias();
+                        estadoConsulta = await dias_desde_primero_enero();
                     break;
                 case '5':
                     while (!estadoConsulta)
-                        estadoConsulta = await diaSemana();
+                        estadoConsulta = await dia_primero_enero();
                     break;
                 default:
                     estado = false;
@@ -189,5 +182,124 @@ const main = async () => {
     }
     process.exit(0);
 };
+
+function validarAge(age) {
+    if (age < 1582 || Number.isNaN(age)) {
+        console.log("A partir de 1582 se inicio a ustilizar este calendario.");
+        console.log("Use años mayores a 1582.");
+        return false;
+    }
+    return true
+};
+
+function validarMes(mes) {
+    if (mes < 1 || mes > 12 || Number.isNaN(mes)) {
+        console.log("Los valores para los meses comprenden valores enteros entre 1 y 12");
+        return false;
+    }
+    return true;
+}
+
+function validarDia(dia, diaFinal) {
+    if (dia < 1 || dia > diaFinal || Number.isNaN(dia)) {
+        console.log("Los valores para este mes comprenden valores enteros entre 1 y ", diaFinal);
+        return false;
+    }
+    return true;
+}
+
+function esBisiesto(age) {
+    if (age % 400 == 0)
+        return true;
+    else
+        if (age % 4 == 0 && age % 100 != 0)
+            return true;
+    return false;
+};
+
+function obtenerCantidadDiasDelMes(mes, age) {
+    if (mes == 2)
+        if (esBisiesto(age))
+            return 29
+        else
+            return 28
+    else if (mes < 8)
+        if (mes % 2 == 1)
+            return 31
+        else
+            return 30
+    else
+        if (mes % 2 == 0)
+            return 31
+        else
+            return 30
+}
+
+function esFechaValida(fecha) {
+    var age = fecha[0]
+    var mes = fecha[1]
+    var tempDia = fecha[2]
+    var diaFinal = 0
+    //Verifica si el mes y el año son correctos'
+    if (!validarAge(age) || !validarMes(mes))
+        return false;
+    diaFinal = obtenerCantidadDiasDelMes(mes, age) //Obtengo los días de ese mes.
+    //Verifica si el dia es válido.
+    if (!validarDia(tempDia, diaFinal))
+        return false;
+    return true;
+}
+
+function incrementarDia(diaFinal, dia, mes, age) {
+    if (dia == diaFinal) {
+        mes += 1;
+        dia = 1;
+    }
+    else
+        dia += 1;
+    if (mes > 12) {
+        age += 1;
+        mes = 1;
+    }
+    return [age, mes, dia];
+}
+
+function obtenerDiaSiguiente(fecha) {
+    var age = fecha[0]
+    var mes = fecha[1]
+    var dia = fecha[2]
+    if (!esFechaValida(fecha))
+        return false;
+    var diaFinal = obtenerCantidadDiasDelMes(mes, age) // Obtengo los días de ese mes.
+    var nuevaFecha = incrementarDia(diaFinal, dia, mes, age) // Aumente un día.
+    return nuevaFecha
+}
+
+async function contarDiasPasados(fecha) {
+    var dias = 0
+    var fechaInicial = [fecha[0], 1, 1]
+    while (!(fecha[0] == fechaInicial[0] && fecha[1] == fechaInicial[1] && fecha[2] == fechaInicial[2])) {
+        dias += 1
+        fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
+    }
+    return dias
+}
+
+
+function obtenerDiaPrimeroDeEnero(age) {
+    ageInicio = 1582
+    dia = 2
+    if (!validarAge(age))
+        return -1;
+    while (ageInicio < age) {
+        if (esBisiesto(ageInicio) || (ageInicio % 100 == 0))
+            dia += 2;
+        else
+            dia += 1;
+        dia = dia % 7;
+        ageInicio += 1;
+    }
+    return dia
+}
 
 main();
