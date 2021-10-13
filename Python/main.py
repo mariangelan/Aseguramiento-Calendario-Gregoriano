@@ -381,16 +381,59 @@ def consultarBisiestos():
         print("»No es bisiesto \n")
     return True
 
-
-def imprimir_3x4(año): ##
+#####################################################
+#R6
+def imprimir_3x4(): ##
+    año = int(input("Digite el año: "))
     calend= CrearCalendario.crearCalendario(año) ##Se crea la estructura de un calendario
     calend.imprimirCalendarioInfo()
     calend.imprimirMes(0,4)
     calend.imprimirMes(4,8)
     calend.imprimirMes(8,12)
 
- 
 
+####################################################################################
+ #R7   
+def moduloMes(mes, anno):
+    resultado = 0
+    if(mes >= 1 and mes <= 12):
+        for i in range(1,mes):
+            resultado = resultado + cantidadDiasMes(i, anno)%7
+        resultado = resultado % 7
+    return resultado
+def dia_semana():
+    fechaValida = (0, 0, 0)
+    valida = False
+    fechaValida = solicitarDiaMesAño()
+    if (fechaValida == False):
+        print("error con la fecha")
+    valida = validar.fecha_es_tupla(fechaValida)
+    if (valida):
+        resultado = -1 #Si retorna -1 hay un error
+        modMes = moduloMes(fechaValida[1], fechaValida[0])
+        annodecre = fechaValida[0] - 1
+        resultado = ((annodecre % 7)+(((annodecre//4) -(3 * (((annodecre//100) + 1) // 4)))%7) + modMes + (fechaValida[2] % 7)) % 7
+        print(resultado)
+        if (resultado == 0):
+              print( " Es día Domingo\n")
+        elif (resultado == 1):
+            print( " Es día Lunes \n")
+        elif (resultado == 2):
+            print( " Es día Martes \n")
+        elif (resultado == 3):
+            print( " Es día Miercoles \n")
+        elif (resultado == 4):
+            print( " Es día Jueves \n")
+        elif (resultado == 5):
+            print( " Es día Viernes \n")
+        elif (resultado == 6):
+            print( " Es día Sabado\n")
+        else:
+            print("error")
+
+    return resultado
+
+##########################################################################
 
 
 
@@ -409,6 +452,7 @@ while(estado):
     print("4) Determinar los días que han pasado desde el primero de ese año. ")
     print("5) Dia específico del primero de enero dado un año. ")
     print("6) Ver calnedario de un año. ")
+    print("7) Ver el día de una fecha. ")
     print("0) Salir del programa. ")
     print("\n")
     try:
@@ -435,8 +479,11 @@ while(estado):
             while (not estadoConsulta):
                 estadoConsulta = diaSemana()
         elif (opcion == 6):
-            año = int(input("Digite el año: "))
-            imprimir_3x4(año)             
+
+          estadoConsulta=  imprimir_3x4()   
+        elif (opcion == 7):
+
+          estadoConsulta= dia_semana()          
         elif (opcion == 0):
             estado = False
         else:
