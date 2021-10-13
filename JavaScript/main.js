@@ -114,7 +114,7 @@ async function dias_desde_primero_enero() {
         console.log("Intente de nuevo");
         return fechaValida;
     }
-    var diasTotales = await contarDiasPasados(fechaValida);
+    var diasTotales = await contarDiasPasados([fecha[0], 1, 1], fechaValida);
     if (diasTotales >= 0) {
         console.log("Han pasado: ", diasTotales, " días \n");
         return true;
@@ -169,6 +169,18 @@ async function fecha_futura() {
     }
     var nuevafecha = obtenerFechaFutura(fecha, dias);
     console.log("La fecha futura es: ", nuevafecha);
+    return true;
+}
+
+async function dias_entre() {
+    var fechaInicial = await solicitarDiaMesAge();
+    var fechaFinal = await solicitarDiaMesAge();
+    if (!fechaInicial || !fechaFinal) {
+        console.log("Intente de nuevo");
+        return false;
+    }
+    var cantdias = await contarDiasPasados(fechaInicial, fechaFinal);
+    console.log("La cantidad de dias entre las fechas es: ", cantdias);
     return true;
 }
 
@@ -264,10 +276,9 @@ function obtenerDiaSiguiente(fecha) {
     return nuevaFecha
 }
 
-async function contarDiasPasados(fecha) {
+async function contarDiasPasados(fechaInicial, fechaFinal) {
     var dias = 0
-    var fechaInicial = [fecha[0], 1, 1]
-    while (!(fecha[0] == fechaInicial[0] && fecha[1] == fechaInicial[1] && fecha[2] == fechaInicial[2])) {
+    while (!(fechaFinal[0] == fechaInicial[0] && fechaFinal[1] == fechaInicial[1] && fechaFinal[2] == fechaInicial[2])) {
         dias += 1
         fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
     }
@@ -343,6 +354,10 @@ const main = async () => {
                 case '8':
                     while (!estadoConsulta)
                         estadoConsulta = await fecha_futura();
+                    break;
+                case '9':
+                    while (!estadoConsulta)
+                        estadoConsulta = await dias_entre();
                     break;
                 default:
                     estado = false;
