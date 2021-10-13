@@ -22,6 +22,21 @@ async function inputLine(text) {
     return await getLine();
 }
 
+async function solicitarDias() {
+    var dias = 0
+    try {
+        dias = Number(await inputLine("Digite la cantidad de días: "));
+    } catch (e) {
+        console.error(e)
+        return false;
+    }
+    if (dias >= 0) {
+        return dias;
+    }
+    else
+        return false;
+};
+
 async function solicitarAge(){
     var age = 0
     try {
@@ -60,8 +75,10 @@ async function solicitarDiaMesAge() {
 async function bisiesto() {
     var age = await solicitarAge();
     var bisiesto = esBisiesto(age);
-    if (age == false)
+    if (age == false) {
+        console.log("Intente de nuevo");
         return false;
+    }
     if (bisiesto == true)
         console.log("Es bisiesto \n");
     else if(bisiesto == false)
@@ -71,16 +88,20 @@ async function bisiesto() {
 
 async function fecha_es_valida() {
     var fechaValida = await solicitarDiaMesAge();
-    if (!fechaValida)
+    if (!fechaValida) {
+        console.log("Intente de nuevo");
         return fechaValida;
+    }
     console.log("Fecha valida \n");
     return true;
 };
 
 async function dia_siguiente() {
     var fechaValida = await solicitarDiaMesAge();
-    if (!fechaValida)
+    if (!fechaValida) {
+        console.log("Intente de nuevo");
         return fechaValida;
+    }
     nuevaFecha = obtenerDiaSiguiente(fechaValida)
     if (nuevaFecha)
         console.log("El siguiente día es: ", nuevaFecha, "\n");
@@ -89,20 +110,25 @@ async function dia_siguiente() {
 
 async function dias_desde_primero_enero() {
     var fechaValida = await solicitarDiaMesAge();
-    if (!fechaValida)
+    if (!fechaValida) {
+        console.log("Intente de nuevo");
         return fechaValida;
+    }
     var diasTotales = await contarDiasPasados(fechaValida);
     if (diasTotales >= 0) {
         console.log("Han pasado: ", diasTotales, " días \n");
         return true;
     }
+    console.log("Intente de nuevo");
     return false;
 }
 
 async function dia_primero_enero() {
     var age = await solicitarAge();
-    if (!age)
+    if (!age) {
+        console.log("Intente de nuevo");
         return age;
+    }
     var text = "El 1 de Enero del  (" + age + ") tiene como día"
     var dia = obtenerDiaPrimeroDeEnero(age)
     switch (dia) {
@@ -134,54 +160,17 @@ async function dia_primero_enero() {
     return true;
 }
 
-const main = async () => {
-
-    var estado = true;
-    var opcion = 0;
-
-    console.log("Bienvenido a la aplicación Calendario Gregoriano en JavaScript")
-    while (estado) {
-        var estadoConsulta = false;
-        console.log("Opciones")
-        console.log("1) Determinar si un año es bisiesto ")
-        console.log("2) Validar Fecha ")
-        console.log("3) Día siguiente de una fecha ")
-        console.log("4) Determinar los días que han pasado desde el primero de ese año. ")
-        console.log("5) Dia específico del primero de enero dado un año. ")
-        console.log("*) Pulsa cualquier tecla para salir del programa. ")
-        try {
-            opcion = await inputLine("Por favor, elija la opción que desea:");
-            switch (opcion) {
-                case '1':
-                    while (!estadoConsulta)
-                        estadoConsulta = await bisiesto();
-                    break;
-                case '2':
-                    while (!estadoConsulta)
-                        estadoConsulta = await fecha_es_valida();
-                    break;
-                case '3':
-                    while (!estadoConsulta)
-                        estadoConsulta = await dia_siguiente();
-                    break;
-                case '4':
-                    while (!estadoConsulta)
-                        estadoConsulta = await dias_desde_primero_enero();
-                    break;
-                case '5':
-                    while (!estadoConsulta)
-                        estadoConsulta = await dia_primero_enero();
-                    break;
-                default:
-                    estado = false;
-                    break;
-            };
-        } catch (e) {
-            console.error("Error: " + e);
-        }
+async function fecha_futura() {
+    var fecha = await solicitarDiaMesAge();
+    var dias = await solicitarDias();
+    if (!fecha || !dias) {
+        console.log("Intente de nuevo");
+        return false;
     }
-    process.exit(0);
-};
+    var nuevafecha = obtenerFechaFutura(fecha, dias);
+    console.log("La fecha futura es: ", nuevafecha);
+    return true;
+}
 
 function validarAge(age) {
     if (age < 1582 || Number.isNaN(age)) {
@@ -285,7 +274,6 @@ async function contarDiasPasados(fecha) {
     return dias
 }
 
-
 function obtenerDiaPrimeroDeEnero(age) {
     ageInicio = 1582
     dia = 2
@@ -301,5 +289,70 @@ function obtenerDiaPrimeroDeEnero(age) {
     }
     return dia
 }
+
+function obtenerFechaFutura(fecha, dias) {
+    var nuevaFecha = fecha;
+    for (var i = 0; i < dias; i++) {
+        nuevaFecha = obtenerDiaSiguiente(nuevaFecha);
+    }
+    return nuevaFecha;
+}
+
+const main = async () => {
+
+    var estado = true;
+    var opcion = 0;
+
+    console.log("Bienvenido a la aplicación Calendario Gregoriano en JavaScript")
+    while (estado) {
+        var estadoConsulta = false;
+        console.log("Opciones")
+        console.log("1) Determinar si un año es bisiesto ")
+        console.log("2) Validar Fecha ")
+        console.log("3) Día siguiente de una fecha ")
+        console.log("4) Determinar los días que han pasado desde el primero de ese año. ")
+        console.log("5) Dia específico del primero de enero dado un año. ")
+        console.log("6)  ")
+        console.log("7)  ")
+        console.log("8) Fecha futura dada una cantidad de días")
+        console.log("9)  ")
+        console.log("*) Pulsa cualquier tecla para salir del programa. ")
+        try {
+            opcion = await inputLine("Por favor, elija la opción que desea:");
+            switch (opcion) {
+                case '1':
+                    while (!estadoConsulta)
+                        estadoConsulta = await bisiesto();
+                    break;
+                case '2':
+                    while (!estadoConsulta)
+                        estadoConsulta = await fecha_es_valida();
+                    break;
+                case '3':
+                    while (!estadoConsulta)
+                        estadoConsulta = await dia_siguiente();
+                    break;
+                case '4':
+                    while (!estadoConsulta)
+                        estadoConsulta = await dias_desde_primero_enero();
+                    break;
+                case '5':
+                    while (!estadoConsulta)
+                        estadoConsulta = await dia_primero_enero();
+                    break;
+                case '8':
+                    while (!estadoConsulta)
+                        estadoConsulta = await fecha_futura();
+                    break;
+                default:
+                    estado = false;
+                    break;
+            };
+        } catch (e) {
+            console.error("Error: " + e);
+        }
+    }
+    process.exit(0);
+};
 
 main();
