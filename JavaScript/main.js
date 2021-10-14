@@ -276,8 +276,24 @@ function obtenerDiaSiguiente(fecha) {
     return nuevaFecha
 }
 
+function fechaMayor(fechaInicial, fechaFinal) {
+    if (fechaInicial[0] > fechaFinal[0])        // Compara años
+        return fechaInicial
+    else if (fechaInicial[1] > fechaFinal[1])   // Compara meses
+        return fechaInicial
+    else if (fechaInicial[2] > fechaFinal[2])
+        return fechaInicial
+    return fechaFinal
+}
+
 async function contarDiasPasados(fechaInicial, fechaFinal) {
     var dias = 0
+    var fechaM = fechaMayor(fechaInicial, fechaFinal)
+    if (fechaM == fechaInicial) {
+        var tempfechaIni = fechaInicial
+        fechaInicial = fechaFinal
+        fechaFinal = tempfechaIni
+    }
     while (!(fechaFinal[0] == fechaInicial[0] && fechaFinal[1] == fechaInicial[1] && fechaFinal[2] == fechaInicial[2])) {
         dias += 1
         fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
