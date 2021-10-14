@@ -384,7 +384,7 @@ def consultarBisiestos():
 #####################################################
 #R6
 def imprimir_3x4(): ##
-    año = int(input("Digite el año: "))
+    año = solicitarAño() 
     calend= CrearCalendario.crearCalendario(año) ##Se crea la estructura de un calendario
     calend.imprimirCalendarioInfo()
     calend.imprimirMes(0,4)
