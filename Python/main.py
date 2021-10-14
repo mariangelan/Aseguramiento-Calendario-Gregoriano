@@ -434,7 +434,26 @@ def dia_semana():
     return resultado
 
 ##########################################################################
+#R8
+#Dados una fecha válida f y un número entero no-negativo n,
+#determinar la fecha que está n días naturales en el futuro.
+def fecha_futura():
+    fecha = (0, 0, 0)
+    
+    fecha = solicitarDiaMesAño()
+    dias = int(input("Digite el número de días: "))
+    if(dias >= 0): #Verifica que la fecha sea valida y que el numero sea positivo
+        respuesta = fecha
+        for i in range(dias): #Se llama la funcion dia_siguiente la cantidad de veces igual al numero de dias ingresado demanera que la fecha se va actualizando
+            fecha_actualizada = validar.DiaSiguiente(respuesta) 
+            respuesta = fecha_actualizada
+        print(respuesta)
+        return respuesta
 
+    else:
+        return -1 #Si retorna -1 hay un error en los datos introducidos
+
+    
 
 
 
@@ -453,6 +472,7 @@ while(estado):
     print("5) Dia específico del primero de enero dado un año. ")
     print("6) Ver calnedario de un año. ")
     print("7) Ver el día de una fecha. ")
+    print("8) Fecha Futura. ")   
     print("0) Salir del programa. ")
     print("\n")
     try:
@@ -484,6 +504,9 @@ while(estado):
         elif (opcion == 7):
 
           estadoConsulta= dia_semana()          
+        elif (opcion == 8):
+
+          estadoConsulta= fecha_futura()            
         elif (opcion == 0):
             estado = False
         else:
