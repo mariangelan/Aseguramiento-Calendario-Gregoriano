@@ -452,8 +452,32 @@ def fecha_futura():
 
     else:
         return -1 #Si retorna -1 hay un error en los datos introducidos
+#R9
+#Dadas dos fechas validas en cualquier orden, se debe dar la diferencia en dias que hay entre ellas
+#debe retornar un numero entero no negativo
+def dias_entre():
+    dias = 0
+    fecha1 = solicitarDiaMesAño()
+    fecha2 = solicitarDiaMesAño()
+    if verificaMayor(fecha1,fecha2) == True: #Escoge que fecha sera la de inicio
+            aux = fecha2
+            fecha2 = fecha1
+            fecha1 = aux
+    while fecha1 != fecha2: #Se llama a la funcion del dia siguiente hasta que la fecha de inicio sea igual a la final
+            fecha1 = validar.DiaSiguiente(fecha1) #Se utiliza la funcion de dia siguiente, para contar pasar la fecha
+            dias +=1 #Es el contador de los dias
+    print("Son un total de:" +dias)
+    return dias
 
-    
+def verificaMayor(fecha1,fecha2):
+    if fecha1[0] > fecha2[0]:
+        return True
+    elif fecha1[0] == fecha2[0] and fecha1[1] > fecha2[1]:
+        return True
+    elif fecha1[0] == fecha2[0] and fecha1[1] == fecha2[1] and fecha1[2] > fecha2[2]:
+        return True
+    else:
+        return False    
 
 
 
@@ -472,7 +496,8 @@ while(estado):
     print("5) Dia específico del primero de enero dado un año. ")
     print("6) Ver calnedario de un año. ")
     print("7) Ver el día de una fecha. ")
-    print("8) Fecha Futura. ")   
+    print("8) Fecha Futura. ")  
+    print("9) Cantidad de días entre dos fechas. ")     
     print("0) Salir del programa. ")
     print("\n")
     try:
@@ -506,7 +531,10 @@ while(estado):
           estadoConsulta= dia_semana()          
         elif (opcion == 8):
 
-          estadoConsulta= fecha_futura()            
+          estadoConsulta= fecha_futura()         
+        elif (opcion == 9):
+
+          estadoConsulta= dias_entre()               
         elif (opcion == 0):
             estado = False
         else:
