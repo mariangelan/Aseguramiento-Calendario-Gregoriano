@@ -466,7 +466,8 @@ def dias_entre():
     while fecha1 != fecha2: #Se llama a la funcion del dia siguiente hasta que la fecha de inicio sea igual a la final
             fecha1 = validar.DiaSiguiente(fecha1) #Se utiliza la funcion de dia siguiente, para contar pasar la fecha
             dias +=1 #Es el contador de los dias
-    print("Son un total de:" +dias)
+    print("Son un total de:" )
+    print(dias)
     return dias
 
 def verificaMayor(fecha1,fecha2):
