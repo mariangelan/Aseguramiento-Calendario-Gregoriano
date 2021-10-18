@@ -1,5 +1,144 @@
 //create by Johel
 
+class Dia { //clase para guardar los datos de un dia
+    constructor(dia, fecha) {
+        this.dia = dia //numero del dia(0 Domingo, 1 Lunes, ...)
+        this.fecha = fecha
+    }
+    diaFecha() {
+        return this.fecha[2] //String del dia
+    }
+}
+
+class Semana { //clase para guardar los datos de una semana
+    constructor() {
+        this.diasSemana = []
+    }
+    addDia(diaNuevo) {
+        this.diasSemana.push(diaNuevo)
+    }
+    imprimirSemana(){ //Metodo que da el formato a los dias de la semana
+        var strSemana = ""
+        if (this.diasSemana.length < 7 && this.diasSemana.length > 0 && this.diasSemana[0].dia > 0) { //Cuantos espacios adelante se ocupan
+            var numEspacio = this.diasSemana[0].dia //Cantidadde espacios que se deja
+            for (var i = 0; i < numEspacio; i++)
+                strSemana += '   |  '
+                //strSemana += '\u{0009}'.format("")
+        }
+        this.diasSemana.forEach(function (dia, index) {
+            strSemana += ''.concat(dia.fecha).padStart(2).padEnd(4) + '|'
+            }
+            //strSemana += '\u{0009}'.format((this.diaFecha()))
+        )
+        //return '\u{0009}'.format(strSemana) + " |"
+
+        return ' '.concat(strSemana)
+    }
+}
+
+class Mes { //clase que representa a un mes del calendario
+    constructor(nombre, numeroMes) {
+        this.nombre = nombre    //nombre del mes
+        this.numMes = numeroMes //numero que representa ese mes
+        this.semanas = []       //Lista de sus respectivas semanas
+    }
+    addSemana(semanaNueva) {
+        this.semanas.push(semanaNueva)
+    }
+    imprimirSemanaMes(semana) {
+        var strSemana = ""
+        if (semana < this.semanas.length)
+            strSemana = this.semanas[semana].imprimirSemana()
+        else if (semana >= this.semanas.length)
+            strSemana = ' '.repeat(21).concat(strSemana, " |")
+            //strSemana = '{:<21}'.format(strSemana) + " |"
+        return strSemana
+    }
+    imprimirInfoMes() { //Retornar un string con el formato de los días
+        //return '{:>3}'.format("D") + '{:>3}'.format("L") + '{:>3}'.format("K") + '{:>3}'.format("M") + '{:>3}'.format("J") + '{:>3}'.format("V") + '{:>3}'.format("S") + " |"
+
+        return ' '.concat("D", '  |  ', "L", '  |  ', "K", '  |  ', "M", '  |  ', "J", '  |  ', "V", '  |  ', "S", '  |')
+    }
+    imprimirNombre() { //Retorna el nombre del mes
+        var tam = 22 - this.nombre.length
+        return this.nombre.padStart(22).padEnd(40).concat("|")
+        //return '{:^21}'.format((this.nombre)) + " |"
+    }
+}
+
+class Calendario { //clase que representa a un calendario
+    constructor(age) {
+        this.age = age //posee un año y una lista de meses
+        this.meses = []
+    }
+    addMes(mesNuevo) {
+        this.meses.push(mesNuevo)
+    }
+    imprimirCalendarioInfo() { //Titulo del claendario
+        var string = ' '.repeat(40).concat('Calendario del año ', this.age)
+        console.log(string)
+    }
+    imprimirMes(ini, fin) { //inicio debe ser menor que fin y debe de ser menor a 12 y mayo a 1
+        var linea = ""                 //Se busca que se imprima los meses que desee el usuario
+        for (var i = ini; i < fin; i++)
+            linea += this.meses[i].imprimirNombre()
+        console.log(linea)
+        linea = ""
+        for (var i = ini; i < fin; i++) 
+            linea += this.meses[i].imprimirInfoMes()
+        console.log(linea)
+        linea = ""
+        for (var j = 0; j < 6; j++){
+            for (var i = ini; i < fin; i++)
+                linea += this.meses[i].imprimirSemanaMes(j)
+            console.log(linea)
+            linea = ""
+        }
+    }
+}
+
+//Crear Calendario
+//Dado un año se crea los meses y dias que este posee
+//Para esto se usan las clasesx Día, Semana, Mes
+function crearCalendario(age) {
+    var nuevoCalen = new Calendario(age)
+    mesesNom = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    contadorDiaSemana = obtenerDiaPrimeroDeEnero(age)
+    for (var i = 0; i < 12; i++)
+        contadorDiaSemana = crearMes(mesesNom[i], i + 1, nuevoCalen, contadorDiaSemana) //Se pasa el calendario para trabajar por refernecia
+    return nuevoCalen
+}
+//Se crea un Mes, para ser agregado al Calendario
+function crearMes(nombreMes, numeroMes, calendario, diaSemana) {
+    var nuevoMes = new Mes(nombreMes, numeroMes)
+    //Se procede a crear las semanas del mes nuevo
+    diaSemana = crearSemanasMes(nuevoMes, calendario.age, diaSemana)
+    //Se agrega el mes al Calendario
+    calendario.addMes(nuevoMes)
+    return diaSemana //Contador de que dia sigue para el siguiente Mes
+}
+
+function crearSemanasMes(mesAct, age, diaSemanaAct) {
+    contadorDiasMes = cantidadDiasMes(mesAct.numMes, age)
+    var semana = new Semana()  
+    for (var diaActFecha = 1; diaActFecha < contadorDiasMes + 1; diaActFecha++){ //Se crean los dias de ese mes
+        //Se crea un nuevo Dia
+        var nuevoDia = new Dia(diaSemanaAct, (age, mesAct.numMes, diaActFecha))
+        semana.addDia(nuevoDia)         //Se agrega el dia a la semana
+        if (diaSemanaAct == 6) {        //Si ya el dia es 6, se crea una nueva semana
+            diaSemanaAct = 0            //Se vuelve el día lunes
+            mesAct.addSemana(semana)    //Se agrega la semana al mes
+            semana = new Semana()           //Se crea una nueva semana
+        }
+        else
+            diaSemanaAct += 1           //Si es otro dia solo se suma el contador
+    }
+    if (diaSemanaAct <= 6)
+        mesAct.addSemana(semana)
+    return diaSemanaAct
+}
+
 const { read } = require('node:fs');
 
 const readline = require('readline').createInterface({
@@ -276,12 +415,91 @@ function obtenerDiaSiguiente(fecha) {
     return nuevaFecha
 }
 
+async function imprimir_3x4() {
+    var age = await solicitarAge()
+    var calend = crearCalendario(age) //Se crea la estructura de un calendario
+    calend.imprimirCalendarioInfo()
+    calend.imprimirMes(0, 4)
+    calend.imprimirMes(4, 8)
+    calend.imprimirMes(8, 12)
+    return true
+}
+
+function cantidadDiasMes(numMes, ) {
+    var meses31 = [1, 3, 5, 7, 8, 10, 12]  // Meses que poseen 31 dias
+    var meses30 = [4, 6, 9, 11]            // Meses que poseen 30 dias
+    var dias = 0
+    if (numMes in meses31)
+        dias = 31
+    else if (numMes in meses30)
+        dias = 30
+    else if (numMes == 2) { // aggefebrero
+        bisiesto = validar.Bisiesto(agge)
+        if (bisiesto == true)
+            dias = 29
+        else
+            dias = 28
+    }
+    return dias
+}
+
+function moduloMes(mes, age) {
+    var resultado = 0
+    if (mes >= 1 && mes <= 12) {
+        for (var i = 1; i < mes; i++)
+            resultado = resultado + cantidadDiasMes(i, age) % 7
+        resultado = resultado % 7
+    }
+    return resultado
+}
+
+async function dia_semana(){
+    var fechaValida = await solicitarDiaMesAge()
+    if (fechaValida == false)
+        return false;
+    var modMes = moduloMes(fechaValida[1], fechaValida[0])
+    var agedecre = fechaValida[0] - 1
+    //              ((annodecre % 7) + (((annodecre//4) -(3 * (((annodecre//100) + 1) // 4)))%7) + modMes + (fechaValida[2] % 7)) % 7
+    var resultado = ((agedecre % 7) + (((agedecre / 4 | 0) - (3 * (((agedecre / 100 | 0) + 1) / 4 | 0))) % 7) + modMes + (fechaValida[2] % 7)) % 7
+    resultado = parseInt(resultado, 10)
+    //console.log(resultado)
+    switch (resultado) {
+        case 0:
+            console.log("Miercoles");
+            break;
+        case 1:
+            console.log("Jueves");
+            break;
+        case 2:
+            console.log("Viernes");
+            break;
+        case 3:
+            console.log("Sabado");
+            break;
+        case 4:
+            console.log("Domingo");
+            break;
+        case 5:
+            console.log("Lunes");
+            break;
+        case 6:
+            console.log("Martes");
+            break;
+        default:
+            console.log("No existe");
+            break;
+    }
+    return true;
+}
+
+
+
 function fechaMayor(fechaInicial, fechaFinal) {
     if (fechaInicial[0] > fechaFinal[0])        // Compara años
         return fechaInicial
     else if (fechaInicial[1] > fechaFinal[1])   // Compara meses
         return fechaInicial
-    else if (fechaInicial[2] > fechaFinal[2])
+    else if (fechaInicial[2] > fechaFinal[2])   // Compara dias
         return fechaInicial
     return fechaFinal
 }
@@ -333,19 +551,19 @@ const main = async () => {
     console.log("Bienvenido a la aplicación Calendario Gregoriano en JavaScript")
     while (estado) {
         var estadoConsulta = false;
-        console.log("Opciones")
-        console.log("1) Determinar si un año es bisiesto ")
-        console.log("2) Validar Fecha ")
-        console.log("3) Día siguiente de una fecha ")
+        console.log("Opciones: ")
+        console.log("1) Determinar si un año es bisiesto. ")
+        console.log("2) Validar fecha. ")
+        console.log("3) Día siguiente de una fecha. ")
         console.log("4) Determinar los días que han pasado desde el primero de ese año. ")
         console.log("5) Dia específico del primero de enero dado un año. ")
-        console.log("6)  ")
-        console.log("7)  ")
-        console.log("8) Fecha futura dada una cantidad de días")
-        console.log("9)  ")
+        console.log("6) Ver calnedario de un año. ")
+        console.log("7) Ver el día de una fecha. ")
+        console.log("8) Fecha Futura. ")
+        console.log("9) Cantidad de días entre dos fechas. ")
         console.log("*) Pulsa cualquier tecla para salir del programa. ")
         try {
-            opcion = await inputLine("Por favor, elija la opción que desea:");
+            opcion = await inputLine("Por favor, elija la opción que desea: ");
             switch (opcion) {
                 case '1':
                     while (!estadoConsulta)
@@ -366,6 +584,14 @@ const main = async () => {
                 case '5':
                     while (!estadoConsulta)
                         estadoConsulta = await dia_primero_enero();
+                    break; 4
+                case '6':
+                    while (!estadoConsulta)
+                        estadoConsulta = await imprimir_3x4();
+                    break;
+                case '7':
+                    while (!estadoConsulta)
+                        estadoConsulta = await dia_semana();
                     break;
                 case '8':
                     while (!estadoConsulta)
