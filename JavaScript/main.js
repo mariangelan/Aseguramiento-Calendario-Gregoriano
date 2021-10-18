@@ -19,20 +19,19 @@ class Semana { //clase para guardar los datos de una semana
     }
     imprimirSemana(){ //Metodo que da el formato a los dias de la semana
         var strSemana = ""
+        var numEspacio
         if (this.diasSemana.length < 7 && this.diasSemana.length > 0 && this.diasSemana[0].dia > 0) { //Cuantos espacios adelante se ocupan
-            var numEspacio = this.diasSemana[0].dia //Cantidadde espacios que se deja
+            numEspacio = this.diasSemana[0].dia //Cantidadde espacios que se deja
             for (var i = 0; i < numEspacio; i++)
-                strSemana += '   |  '
+                strSemana += '     |'
                 //strSemana += '\u{0009}'.format("")
         }
         this.diasSemana.forEach(function (dia, index) {
-            strSemana += ''.concat(dia.fecha).padStart(2).padEnd(4) + '|'
+            strSemana += '  '.concat(dia.fecha).padEnd(5) + '|'
             }
             //strSemana += '\u{0009}'.format((this.diaFecha()))
         )
-        //return '\u{0009}'.format(strSemana) + " |"
-
-        return ' '.concat(strSemana)
+        return ' '+strSemana
     }
 }
 
@@ -47,22 +46,27 @@ class Mes { //clase que representa a un mes del calendario
     }
     imprimirSemanaMes(semana) {
         var strSemana = ""
-        if (semana < this.semanas.length)
+        if (semana < this.semanas.length) {
             strSemana = this.semanas[semana].imprimirSemana()
-        else if (semana >= this.semanas.length)
-            strSemana = ' '.repeat(21).concat(strSemana, " |")
-            //strSemana = '{:<21}'.format(strSemana) + " |"
+            if (semana == this.semanas.length - 1) {
+                var espacios = 7-this.semanas[semana].diasSemana.length
+                for (var i = 0; i < espacios; i++) {
+                    strSemana += '     |'
+                }
+            }
+        }
+        else if (semana >= this.semanas.length) {
+            strSemana = '     |'.repeat(7)
+            
+        }
         return strSemana
     }
     imprimirInfoMes() { //Retornar un string con el formato de los días
-        //return '{:>3}'.format("D") + '{:>3}'.format("L") + '{:>3}'.format("K") + '{:>3}'.format("M") + '{:>3}'.format("J") + '{:>3}'.format("V") + '{:>3}'.format("S") + " |"
-
-        return ' '.concat("D", '  |  ', "L", '  |  ', "K", '  |  ', "M", '  |  ', "J", '  |  ', "V", '  |  ', "S", '  |')
+        return ' '.concat("  ", "D", '  |  ', "L", '  |  ', "K", '  |  ', "M", '  |  ', "J", '  |  ', "V", '  |  ', "S", '  |')
     }
     imprimirNombre() { //Retorna el nombre del mes
         var tam = 22 - this.nombre.length
-        return this.nombre.padStart(22).padEnd(40).concat("|")
-        //return '{:^21}'.format((this.nombre)) + " |"
+        return this.nombre.padStart(22).padEnd(42).concat("|")
     }
 }
 
@@ -129,7 +133,7 @@ function crearSemanasMes(mesAct, age, diaSemanaAct) {
         if (diaSemanaAct == 6) {        //Si ya el dia es 6, se crea una nueva semana
             diaSemanaAct = 0            //Se vuelve el día lunes
             mesAct.addSemana(semana)    //Se agrega la semana al mes
-            semana = new Semana()           //Se crea una nueva semana
+            semana = new Semana()       //Se crea una nueva semana
         }
         else
             diaSemanaAct += 1           //Si es otro dia solo se suma el contador
@@ -425,16 +429,16 @@ async function imprimir_3x4() {
     return true
 }
 
-function cantidadDiasMes(numMes, ) {
+function cantidadDiasMes(numMes, age) {
     var meses31 = [1, 3, 5, 7, 8, 10, 12]  // Meses que poseen 31 dias
     var meses30 = [4, 6, 9, 11]            // Meses que poseen 30 dias
     var dias = 0
-    if (numMes in meses31)
+    if (meses31.includes(numMes))
         dias = 31
-    else if (numMes in meses30)
+    else if (meses30.includes(numMes))
         dias = 30
     else if (numMes == 2) { // aggefebrero
-        bisiesto = validar.Bisiesto(agge)
+        bisiesto = esBisiesto(age)
         if (bisiesto == true)
             dias = 29
         else
@@ -465,25 +469,25 @@ async function dia_semana(){
     //console.log(resultado)
     switch (resultado) {
         case 0:
-            console.log("Miercoles");
-            break;
-        case 1:
-            console.log("Jueves");
-            break;
-        case 2:
-            console.log("Viernes");
-            break;
-        case 3:
-            console.log("Sabado");
-            break;
-        case 4:
             console.log("Domingo");
             break;
-        case 5:
+        case 1:
             console.log("Lunes");
             break;
-        case 6:
+        case 2:
             console.log("Martes");
+            break;
+        case 3:
+            console.log("Miercoles");
+            break;
+        case 4:
+            console.log("Jueves");
+            break;
+        case 5:
+            console.log("Viernes");
+            break;
+        case 6:
+            console.log("Sabado");
             break;
         default:
             console.log("No existe");
