@@ -423,9 +423,10 @@ async function imprimir_3x4() {
     var age = await solicitarAge()
     var calend = crearCalendario(age) //Se crea la estructura de un calendario
     calend.imprimirCalendarioInfo()
-    calend.imprimirMes(0, 4)
-    calend.imprimirMes(4, 8)
-    calend.imprimirMes(8, 12)
+    calend.imprimirMes(0, 3)
+    calend.imprimirMes(3, 6)
+    calend.imprimirMes(6, 9)
+    calend.imprimirMes(9, 12)
     return true
 }
 
