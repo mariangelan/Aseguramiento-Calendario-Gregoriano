@@ -61,7 +61,7 @@ class Mes { //clase que representa a un mes del calendario
         }
         return strSemana
     }
-    imprimirInfoMes() { //Retornar un string con el formato de los días
+    imprimirInfoMes() { //Retornar un string con el formato de los dÃ­as
         return ' '.concat("  ", "D", '  |  ', "L", '  |  ', "K", '  |  ', "M", '  |  ', "J", '  |  ', "V", '  |  ', "S", '  |')
     }
     imprimirNombre() { //Retorna el nombre del mes
@@ -72,14 +72,14 @@ class Mes { //clase que representa a un mes del calendario
 
 class Calendario { //clase que representa a un calendario
     constructor(age) {
-        this.age = age //posee un año y una lista de meses
+        this.age = age //posee un aÃ±o y una lista de meses
         this.meses = []
     }
     addMes(mesNuevo) {
         this.meses.push(mesNuevo)
     }
     imprimirCalendarioInfo() { //Titulo del claendario
-        var string = ' '.repeat(40).concat('Calendario del año ', this.age)
+        var string = ' '.repeat(40).concat('Calendario del aÃ±o ', this.age)
         console.log(string)
     }
     imprimirMes(ini, fin) { //inicio debe ser menor que fin y debe de ser menor a 12 y mayo a 1
@@ -102,8 +102,8 @@ class Calendario { //clase que representa a un calendario
 }
 
 //Crear Calendario
-//Dado un año se crea los meses y dias que este posee
-//Para esto se usan las clasesx Día, Semana, Mes
+//Dado un aÃ±o se crea los meses y dias que este posee
+//Para esto se usan las clasesx DÃ­a, Semana, Mes
 function crearCalendario(age) {
     var nuevoCalen = new Calendario(age)
     mesesNom = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -131,7 +131,7 @@ function crearSemanasMes(mesAct, age, diaSemanaAct) {
         var nuevoDia = new Dia(diaSemanaAct, (age, mesAct.numMes, diaActFecha))
         semana.addDia(nuevoDia)         //Se agrega el dia a la semana
         if (diaSemanaAct == 6) {        //Si ya el dia es 6, se crea una nueva semana
-            diaSemanaAct = 0            //Se vuelve el día lunes
+            diaSemanaAct = 0            //Se vuelve el dÃ­a lunes
             mesAct.addSemana(semana)    //Se agrega la semana al mes
             semana = new Semana()       //Se crea una nueva semana
         }
@@ -168,7 +168,7 @@ async function inputLine(text) {
 async function solicitarDias() {
     var dias = 0
     try {
-        dias = Number(await inputLine("Digite la cantidad de días: "));
+        dias = Number(await inputLine("Digite la cantidad de dÃ­as: "));
     } catch (e) {
         console.error(e)
         return false;
@@ -183,7 +183,7 @@ async function solicitarDias() {
 async function solicitarAge(){
     var age = 0
     try {
-        age = Number(await inputLine("Digite el año: "));
+        age = Number(await inputLine("Digite el aÃ±o: "));
     } catch (e) {
         console.error(e);
         return false;
@@ -198,9 +198,9 @@ async function solicitarAge(){
 async function solicitarDiaMesAge() {
     var age, mes, dia = 0
     try {
-        age = parseInt(await inputLine("Digite el año (ejm:2021): "), 10);
+        age = parseInt(await inputLine("Digite el aÃ±o (ejm:2021): "), 10);
         mes = parseInt(await inputLine("Digite el mes(ejm: 2): "), 10);
-        dia = parseInt(await inputLine("Digite el día(ejm:20): "), 10);
+        dia = parseInt(await inputLine("Digite el dÃ­a(ejm:20): "), 10);
     } catch (e) {
         console.error(e);
         return false;
@@ -247,7 +247,7 @@ async function dia_siguiente() {
     }
     nuevaFecha = obtenerDiaSiguiente(fechaValida)
     if (nuevaFecha)
-        console.log("El siguiente día es: ", nuevaFecha, "\n");
+        console.log("El siguiente dÃ­a es: ", nuevaFecha, "\n");
     return nuevaFecha;
 }
 
@@ -259,7 +259,7 @@ async function dias_desde_primero_enero() {
     }
     var diasTotales = await contarDiasPasados([fecha[0], 1, 1], fechaValida);
     if (diasTotales >= 0) {
-        console.log("Han pasado: ", diasTotales, " días \n");
+        console.log("Han pasado: ", diasTotales, " dÃ­as \n");
         return true;
     }
     console.log("Intente de nuevo");
@@ -272,7 +272,7 @@ async function dia_primero_enero() {
         console.log("Intente de nuevo");
         return age;
     }
-    var text = "El 1 de Enero del  (" + age + ") tiene como día"
+    var text = "El 1 de Enero del  (" + age + ") tiene como dÃ­a"
     var dia = obtenerDiaPrimeroDeEnero(age)
     switch (dia) {
         case 0:
@@ -330,7 +330,7 @@ async function dias_entre() {
 function validarAge(age) {
     if (age < 1582 || Number.isNaN(age)) {
         console.log("A partir de 1582 se inicio a ustilizar este calendario.");
-        console.log("Use años mayores a 1582.");
+        console.log("Use aÃ±os mayores a 1582.");
         return false;
     }
     return true
@@ -384,11 +384,11 @@ function esFechaValida(fecha) {
     var mes = fecha[1]
     var tempDia = fecha[2]
     var diaFinal = 0
-    //Verifica si el mes y el año son correctos'
+    //Verifica si el mes y el aÃ±o son correctos'
     if (!validarAge(age) || !validarMes(mes))
         return false;
-    diaFinal = obtenerCantidadDiasDelMes(mes, age) //Obtengo los días de ese mes.
-    //Verifica si el dia es válido.
+    diaFinal = obtenerCantidadDiasDelMes(mes, age) //Obtengo los dÃ­as de ese mes.
+    //Verifica si el dia es vÃ¡lido.
     if (!validarDia(tempDia, diaFinal))
         return false;
     return true;
@@ -414,8 +414,8 @@ function obtenerDiaSiguiente(fecha) {
     var dia = fecha[2]
     if (!esFechaValida(fecha))
         return false;
-    var diaFinal = obtenerCantidadDiasDelMes(mes, age) // Obtengo los días de ese mes.
-    var nuevaFecha = incrementarDia(diaFinal, dia, mes, age) // Aumente un día.
+    var diaFinal = obtenerCantidadDiasDelMes(mes, age) // Obtengo los dÃ­as de ese mes.
+    var nuevaFecha = incrementarDia(diaFinal, dia, mes, age) // Aumente un dÃ­a.
     return nuevaFecha
 }
 
@@ -500,7 +500,7 @@ async function dia_semana(){
 
 
 function fechaMayor(fechaInicial, fechaFinal) {
-    if (fechaInicial[0] > fechaFinal[0])        // Compara años
+    if (fechaInicial[0] > fechaFinal[0])        // Compara aÃ±os
         return fechaInicial
     else if (fechaInicial[1] > fechaFinal[1])   // Compara meses
         return fechaInicial
@@ -519,7 +519,7 @@ async function contarDiasPasados(fechaInicial, fechaFinal) {
     }
     while (!(fechaFinal[0] == fechaInicial[0] && fechaFinal[1] == fechaInicial[1] && fechaFinal[2] == fechaInicial[2])) {
         dias += 1
-        fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
+        fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el dÃ­a siguiente.
     }
     return dias
 }
@@ -553,22 +553,22 @@ const main = async () => {
     var estado = true;
     var opcion = 0;
 
-    console.log("Bienvenido a la aplicación Calendario Gregoriano en JavaScript")
+    console.log("Bienvenido a la aplicaciÃ³n Calendario Gregoriano en JavaScript")
     while (estado) {
         var estadoConsulta = false;
         console.log("Opciones: ")
-        console.log("1) Determinar si un año es bisiesto. ")
+        console.log("1) Determinar si un aÃ±o es bisiesto. ")
         console.log("2) Validar fecha. ")
-        console.log("3) Día siguiente de una fecha. ")
-        console.log("4) Determinar los días que han pasado desde el primero de ese año. ")
-        console.log("5) Dia específico del primero de enero dado un año. ")
-        console.log("6) Ver calnedario de un año. ")
-        console.log("7) Ver el día de una fecha. ")
+        console.log("3) DÃ­a siguiente de una fecha. ")
+        console.log("4) Determinar los dÃ­as que han pasado desde el primero de ese aÃ±o. ")
+        console.log("5) Dia especÃ­fico del primero de enero dado un aÃ±o. ")
+        console.log("6) Ver calnedario de un aÃ±o. ")
+        console.log("7) Ver el dÃ­a de una fecha. ")
         console.log("8) Fecha Futura. ")
-        console.log("9) Cantidad de días entre dos fechas. ")
+        console.log("9) Cantidad de dÃ­as entre dos fechas. ")
         console.log("*) Pulsa cualquier tecla para salir del programa. ")
         try {
-            opcion = await inputLine("Por favor, elija la opción que desea: ");
+            opcion = await inputLine("Por favor, elija la opciÃ³n que desea: ");
             switch (opcion) {
                 case '1':
                     while (!estadoConsulta)
@@ -589,7 +589,7 @@ const main = async () => {
                 case '5':
                     while (!estadoConsulta)
                         estadoConsulta = await dia_primero_enero();
-                    break; 4
+                    break;
                 case '6':
                     while (!estadoConsulta)
                         estadoConsulta = await imprimir_3x4();
