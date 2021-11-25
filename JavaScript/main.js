@@ -419,15 +419,16 @@ function obtenerDiaSiguiente(fecha) {
     return nuevaFecha
 }
 
-async function imprimir_3x4() {
-    var age = await solicitarAge()
-    var calend = crearCalendario(age) //Se crea la estructura de un calendario
-    calend.imprimirCalendarioInfo()
-    calend.imprimirMes(0, 3)
-    calend.imprimirMes(3, 6)
-    calend.imprimirMes(6, 9)
-    calend.imprimirMes(9, 12)
-    return true
+function imprimir_3x4(age) {
+    if (validarAge(age)) {
+        var calend = crearCalendario(age) //Se crea la estructura de un calendario
+        calend.imprimirCalendarioInfo()
+        calend.imprimirMes(0, 3)
+        calend.imprimirMes(3, 6)
+        calend.imprimirMes(6, 9)
+        calend.imprimirMes(9, 12)
+        return true
+    } else { return false }
 }
 
 function cantidadDiasMes(numMes, age) {
@@ -502,26 +503,30 @@ async function dia_semana(){
 function fechaMayor(fechaInicial, fechaFinal) {
     if (fechaInicial[0] > fechaFinal[0])        // Compara años
         return fechaInicial
-    else if (fechaInicial[1] > fechaFinal[1])   // Compara meses
+    else if (fechaInicial[1] > fechaFinal[1] && fechaInicial[0] >= fechaFinal[0])   // Compara meses
         return fechaInicial
-    else if (fechaInicial[2] > fechaFinal[2])   // Compara dias
+    else if (fechaInicial[2] > fechaFinal[2] && fechaInicial[1] >= fechaFinal[1] && fechaInicial[0] >= fechaFinal[0])   // Compara dias
         return fechaInicial
     return fechaFinal
 }
 
-async function contarDiasPasados(fechaInicial, fechaFinal) {
-    var dias = 0
-    var fechaM = fechaMayor(fechaInicial, fechaFinal)
-    if (fechaM == fechaInicial) {
-        var tempfechaIni = fechaInicial
-        fechaInicial = fechaFinal
-        fechaFinal = tempfechaIni
-    }
-    while (!(fechaFinal[0] == fechaInicial[0] && fechaFinal[1] == fechaInicial[1] && fechaFinal[2] == fechaInicial[2])) {
-        dias += 1
-        fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
-    }
-    return dias
+function contarDiasPasados(fechaInicial, fechaFinal) {
+    if (esFechaValida(fechaInicial) && esFechaValida(fechaFinal)) {
+        var dias = 0
+        var fechaM = fechaMayor(fechaInicial, fechaFinal)
+        if (fechaM == fechaInicial) {
+            var tempfechaIni = fechaInicial
+            fechaInicial = fechaFinal
+            fechaFinal = tempfechaIni
+        }
+        while (!(fechaFinal[0] == fechaInicial[0] && fechaFinal[1] == fechaInicial[1] && fechaFinal[2] == fechaInicial[2])) {
+            dias += 1
+            fechaInicial = obtenerDiaSiguiente(fechaInicial) // Obtiene el día siguiente.
+        }
+        return dias
+    } else {
+        return false
+    }    
 }
 
 function obtenerDiaPrimeroDeEnero(age) {
@@ -617,4 +622,7 @@ const main = async () => {
     process.exit(0);
 };
 
-main();
+//main();
+
+
+module.exports = { obtenerDiaSiguiente, obtenerDiaPrimeroDeEnero, imprimir_3x4, contarDiasPasados };

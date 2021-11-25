@@ -270,14 +270,14 @@ class Validaciones:
 
 validar = Validaciones()
 
-def solicitarDiaMesAño():
+def solicitarDiaMesAño(fecha):
     año = mes = dia = 0
     print("░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░♠░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ ")
     print("\n")
     try:
-        año = int(input("Digite el año (ejm:2021): "))
-        mes = int(input("Digite el mes (ejm:2): "))
-        dia = int(input("Digite el día(ejm:20): "))
+        año = fecha[0]
+        mes = fecha[1]
+        dia = fecha[2]
         if (año <= 0 or mes <= 0 or dia <= 0):
             print("Se necesita un numero mayor a cero")
             return False
@@ -287,12 +287,12 @@ def solicitarDiaMesAño():
     print("\n")
     return (año, mes, dia)
 
-def solicitarAño():
+def solicitarAño(age):
     año = 0
     print("░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░♠░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ ")
     print("\n")
     try:
-        año = int(input("Digite el año: "))
+        año = age #int(input("Digite el año: "))
         if (año <= 0):
             print("Se necesita un numero mayor a cero")
             
@@ -317,18 +317,18 @@ def consultarFecha():
         return True
     return False
 
-def siguiente():
-    fechaValida = (0, 0, 0)
+def siguiente(fechaValida):
+    #fechaValida = (0, 0, 0)
     nuevaFecha = (0, 0, 0)
-    fechaValida = solicitarDiaMesAño()
+    fechaValida = solicitarDiaMesAño(fechaValida)
     if (fechaValida == False):
-        return False
+        raise TypeError
     # Obtenga una nueva fecha.
     nuevaFecha = validar.DiaSiguiente(fechaValida)
     if (nuevaFecha == (-1, -1, -1)):
-        return False
+        raise TypeError
     print("»El siguiente día es: " + str(nuevaFecha))
-    return True
+    return nuevaFecha
 
 def contarDias():
     fechaValida = (0, 0, 0)
@@ -342,9 +342,9 @@ def contarDias():
         return True
     return False
 
-def diaSemana():
+def diaSemana(age):
     dia = 0
-    año = solicitarAño() 
+    año = solicitarAño(age) 
     if (año == False):
         return False
     text = "»El 1 de Enero del  (" + str(año) + ") tiene como día"
@@ -383,13 +383,17 @@ def consultarBisiestos():
 
 #####################################################
 #R6
-def imprimir_3x4(): ##
-    año = solicitarAño() 
-    calend= CrearCalendario.crearCalendario(año) ##Se crea la estructura de un calendario
-    calend.imprimirCalendarioInfo()
-    calend.imprimirMes(0,4)
-    calend.imprimirMes(4,8)
-    calend.imprimirMes(8,12)
+def imprimir_3x4(age): ##
+    año = solicitarAño(age) 
+    if (año != False and validar.validarAño(age)):
+        calend= CrearCalendario.crearCalendario(año) ##Se crea la estructura de un calendario
+        calend.imprimirCalendarioInfo()
+        calend.imprimirMes(0,4)
+        calend.imprimirMes(4,8)
+        calend.imprimirMes(8,12)
+        return True
+    else:
+        return False
 
 
 ####################################################################################
@@ -455,20 +459,23 @@ def fecha_futura():
 #R9
 #Dadas dos fechas validas en cualquier orden, se debe dar la diferencia en dias que hay entre ellas
 #debe retornar un numero entero no negativo
-def dias_entre():
+def dias_entre(fecha1, fecha2):
     dias = 0
-    fecha1 = solicitarDiaMesAño()
-    fecha2 = solicitarDiaMesAño()
-    if verificaMayor(fecha1,fecha2) == True: #Escoge que fecha sera la de inicio
-            aux = fecha2
-            fecha2 = fecha1
-            fecha1 = aux
-    while fecha1 != fecha2: #Se llama a la funcion del dia siguiente hasta que la fecha de inicio sea igual a la final
-            fecha1 = validar.DiaSiguiente(fecha1) #Se utiliza la funcion de dia siguiente, para contar pasar la fecha
-            dias +=1 #Es el contador de los dias
-    print("Son un total de:" )
-    print(dias)
-    return dias
+    fecha1 = solicitarDiaMesAño(fecha1)
+    fecha2 = solicitarDiaMesAño(fecha2)
+    if(fecha1!=False and fecha2!=False and validar.fecha_es_tupla(fecha1) and validar.fecha_es_tupla(fecha2)):
+        if verificaMayor(fecha1,fecha2) == True: #Escoge que fecha sera la de inicio
+                aux = fecha2
+                fecha2 = fecha1
+                fecha1 = aux
+        while fecha1 != fecha2: #Se llama a la funcion del dia siguiente hasta que la fecha de inicio sea igual a la final
+                fecha1 = validar.DiaSiguiente(fecha1) #Se utiliza la funcion de dia siguiente, para contar pasar la fecha
+                dias +=1 #Es el contador de los dias
+        print("Son un total de:" )
+        print(dias)
+        return dias
+    else:
+        return False
 
 def verificaMayor(fecha1,fecha2):
     if fecha1[0] > fecha2[0]:
@@ -480,7 +487,7 @@ def verificaMayor(fecha1,fecha2):
     else:
         return False    
 
-
+'''
 
 estado = True
 opcion = 0
@@ -541,5 +548,4 @@ while(estado):
         else:
             print("ERROR \n")
     except ValueError:
-        print("ERROR \n")
-
+        print("ERROR \n")'''
